@@ -26,17 +26,56 @@ import numpy as np
 import pandas as pd
 import matplotlib
 import matplotlib.pyplot as plt
+import json
 
 
 csv_file_name = 'EURUSD240.csv'
+CACHE_FNAME = 'data_cache.json'
 
 k1_lst = list(np.arange(0, 1, 0.01).round(2))
 
-return_lst = []
-for k1 in k1_lst[:10]:
-    print(k1)
+try:
+    cache_file = open(CACHE_FNAME, 'r')
+    cache_contents = cache_file.read()
+    CACHE_DICTION = json.loads(cache_contents)
+    cache_file.close()
+except:
+    CACHE_DICTION = {}
+
+
+def write_new_returns(k1):
     data = Data(csv_file_name=csv_file_name, k1=k1, k2=0.32)
     data.cpt_r_std_SR()
-    return_lst.append(data.return_)
+    key = str(k1)
+    CACHE_DICTION[key] = {}
+    CACHE_DICTION[key]['strategy_return'] = data.s_return
+    CACHE_DICTION[key]['strategy_std'] = data.s_std
+    CACHE_DICTION[key]['strategy_SR'] = data.s_SR
+    CACHE_DICTION[key]['forex_return'] = data.f_return
+    CACHE_DICTION[key]['forex_std'] = data.f_std
+    CACHE_DICTION[key]['forex_SR'] = data.f_SR
 
-print(return_lst)
+    dumped_json_cache = json.dumps(CACHE_DICTION, indent=2)
+    fw = open(CACHE_FNAME, 'w')
+    fw.write(dumped_json_cache)
+    fw.close()
+
+
+def get_returns_using_cache(param_lst):
+    s_return_lst = []
+    f_return_lst = []
+    for k1 in param_lst:
+        key = str(k1)
+        if key not in CACHE_DICTION:
+            print(k1)
+            write_new_returns(k1)
+
+        s_return_lst.append(CACHE_DICTION[key]['strategy_return'])
+        f_return_lst.append(CACHE_DICTION[key]['forex_return'])
+    return s_return_lst, f_return_lst
+
+
+strategy_return_lst, forex_return_lst = get_returns_using_cache(k1_lst)
+
+plt.plot(strategy_return_lst)
+plt.show()

@@ -12,9 +12,12 @@ class Data:
         self.df = pd.DataFrame(pd.read_csv(csv_file_name, header=None))
         self.k1_long_limit = k1
         self.k2_stop_win = k2
-        self.return_ = None
-        self.std = None
-        self.sharpe_ratio = None
+        self.s_return = None
+        self.s_std = None
+        self.s_SR = None
+        self.f_return = None
+        self.f_std = None
+        self.f_SR = None
 
     def init_columns(self):
         self.df.columns = ['date', 'time', 'open', 'high', 'low', 'close', 'volume']
@@ -97,6 +100,9 @@ class Data:
 
     def cpt_r_std_SR(self):
         self.strategy()
-        self.return_ = self.df['return'].mean()
-        self.std = self.df['return'].std()
-        self.sharpe_ratio = self.return_ / self.std
+        self.s_return = self.df['return'].mean()
+        self.s_std = self.df['return'].std()
+        self.s_SR = self.s_return / self.s_std
+        self.f_return = self.df['pct_change'].mean()
+        self.f_std = self.df['pct_change'].std()
+        self.f_SR = self.f_return / self.f_std
