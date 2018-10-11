@@ -167,3 +167,4 @@ class Data1D(Data):
 
         self.df['R'] = self.df['high'] - self.df['low']
         self.df['R2'] = self.df['high_5d'] - self.df['low_5d']
+

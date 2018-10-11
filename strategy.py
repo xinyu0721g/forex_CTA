@@ -31,8 +31,8 @@ import json
 """
 *************************** data set and params *****************************************
 """
-CSV_FNAME = 'EURJPY5.csv'
-TI = 1440  # to determine which kind of Data objects to create
+CSV_FNAME = 'EURJPY240.csv'
+TI = 240  # to determine which kind of Data objects to create
 k1_lst = list(np.arange(0, 1, 0.01).round(2))
 k2_lst = list(np.arange(0, 1, 0.01).round(2))
 
