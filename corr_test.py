@@ -26,6 +26,7 @@ def data_process(df, r1_multi, r2_multi):
     :param r2_multi: int(r2_length/5)
     :return: None
     """
+    print(df)
     df.columns = ['date', 'time', 'open', 'high', 'low', 'close']
 
     df['high_R1'] = df['high'].rolling(r1_multi).max()
@@ -156,16 +157,14 @@ if __name__ == "__main__":
     CSV_FNAME = 'EURJPY5.csv'
     time_interval = 5
     R1_lst = [5, 10, 30, 60, 120, 240, 480, 1440]
-    R2_lst = [60, 120, 240, 480, 1440, 2880]
+    R2_lst = [5, 10, 30, 60, 120, 240, 480, 1440, 2880]
 
     """
     calculate correlation with specific lengths
     """
-    R1_length = 10
-    R2_length = 60
+    R1_length = 5
+    R2_length = 10
     DF = pd.DataFrame(pd.read_csv(CSV_FNAME, header=None))
-    # corr = calc_corr_with_length(DF, R1_length, R2_length)
-    # print(corr)
     fit_data_with_length(DF, R1_length, R2_length)
 
     """
