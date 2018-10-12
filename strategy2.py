@@ -13,17 +13,17 @@ TIME_INT = 5
 START = '5/29/2018'
 END = '8/31/2018'
 
-R1_LEN = 10
-R2_LEN = 60
-R1_MUL = int(R1_LEN / TIME_INT)
-R2_MUL = int(R2_LEN / TIME_INT)
-strategy_start_row = int(R2_MUL/R1_MUL)
+R1_LEN = 5
+R2_LEN = 10
 
 K1_LST = list(np.arange(0.1, 0.5, 0.1).round(1))
 K2_LST = list(np.arange(0.5, 1, 0.1).round(1))
 """
 ******************************************************************************************
 """
+R1_MUL = int(R1_LEN / TIME_INT)
+R2_MUL = int(R2_LEN / TIME_INT)
+strategy_start_row = int(R2_MUL/R1_MUL)
 
 
 def create_df_test(csv_file_name=CSV_FNAME, start_date=START, end_date=END):
@@ -159,7 +159,7 @@ def get_return_using_cache(param1, param2):
     return strategy_return
 
 
-def get_returns_using_cache(param1_lst, param2_lst):
+def get_return_df_using_cache(param1_lst, param2_lst):
     """
     先尝试扫描k1
     :param param1_lst: list of param1 to be tested
@@ -176,11 +176,26 @@ def get_returns_using_cache(param1_lst, param2_lst):
     return df_returns
 
 
+def plot_strategy(df, param1, param2, r1_multiplier=R1_MUL, r2_multiplier=R2_MUL, start_row=strategy_start_row):
+    df_process(df, param1, r1_multiplier, r2_multiplier)
+    strategy(df, param2, start_row)
+    matplotlib.style.use('ggplot')
+    fig = plt.figure(figsize=(10, 5))
+    ax = fig.add_subplot(1, 1, 1)
+    ax.plot(df.f_return_cum)
+    ax.plot(df.s_return_cum)
+    plt.legend()
+    plt.show()
+    pass
+
+
 def plot_return_heatmap(param1_lst, param2_lst):
-    df = get_returns_using_cache(param1_lst, param2_lst)
+    df = get_return_df_using_cache(param1_lst, param2_lst)
     sns.heatmap(df)
     plt.show()
 
 
 if __name__ == '__main__':
-    plot_return_heatmap(K1_LST, K2_LST)
+    # plot_return_heatmap(K1_LST, K2_LST)
+    df = create_df_for_strategy()
+    plot_strategy(df, 0.3, 0.6)
